@@ -1,0 +1,23 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "description": "Node Authentication Server",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./",
+    "build": "tsc -p ."
+  },
+  "keywords": [
+    "auth",
+    "node",
+    "server"
+  ],
+  "author": "Fernanda Ribeiro",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "nodemon": "^2.0.14",
+    "typescript": "^4.4.4"
+  }
+}
