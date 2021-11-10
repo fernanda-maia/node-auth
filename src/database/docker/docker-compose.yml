@@ -1,12 +1,15 @@
 version: '3.7'
 
 services:
-  database-dealership:
+
+  database-users-application:
     image: postgres:latest
+
     environment:
       POSTGRES_PASSWORD: admin
       POSTGRES_USER: admin
       POSTGRES_DB: users_application
+      
     container_name: db-users
     ports:
       - 5432:5432
