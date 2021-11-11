@@ -24,7 +24,24 @@ class UserRepository {
          return user;
 
       } catch(error) {
-         throw new DatabaseError("ID not found");
+         throw new DatabaseError("ID not found", error);
+      }
+   }
+
+   async findByUsernameAndPassword(username: string, password: string): Promise<User | null> {
+      try {
+         const query = `
+            SELECT uuid, username FROM tb_users_application
+               WHERE username = $1 AND password = crypt($2, password)
+         `
+         const params = [ username, password ];
+         const { rows } = await db.query<User>(query, params);
+         const [ user ] = rows;
+   
+         return user || null;
+
+      } catch(error) {
+         throw new DatabaseError("Username or password wrong!" , error);
       }
    }
 

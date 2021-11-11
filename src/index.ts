@@ -1,6 +1,8 @@
 import express, { Request, Response, NextFunction } from 'express';
+
 import usersRoute from './routes/users.route';
 import statusRoutes from './routes/status.route';
+import authRoute from './routes/authorization.route';
 import errorHandler from './middleware/error.handler';
 
 const PORT = 3000;
@@ -12,6 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(statusRoutes);
+app.use(authRoute);
 app.use(usersRoute);
 
 app.use(errorHandler);
