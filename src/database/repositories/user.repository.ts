@@ -1,5 +1,6 @@
-import User from '../../model/user.model';
 import db from '../config/db';
+import User from '../../model/user.model';
+import DatabaseError from '../../model/errors/database.error.model';
 
 class UserRepository {
 
@@ -11,6 +12,7 @@ class UserRepository {
    }
 
    async findById(uuid: string): Promise<User> {
+      try {
          const query = `
             SELECT uuid, username FROM tb_users_application
                WHERE uuid = $1
@@ -20,6 +22,10 @@ class UserRepository {
          const [ user ] = rows
 
          return user;
+
+      } catch(error) {
+         throw new DatabaseError("ID not found");
+      }
    }
 
    async createUser(user: User): Promise<string> {

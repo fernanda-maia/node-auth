@@ -11,10 +11,16 @@ usersRoute.get('/users', async (req: Request, res: Response, next: NextFunction)
 });
 
 usersRoute.get('/users/:uuid', async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
-    const { uuid }= req.params;
-    const user = await userRepository.findById(uuid);
+   try {
+       const { uuid }= req.params;
+       const user = await userRepository.findById(uuid);
 
-    res.status(StatusCodes.OK).send(user);
+       res.status(StatusCodes.OK).send(user);
+       
+   } catch(error) {
+        next(error);
+   }
+   
 });
 
 usersRoute.post('/users', async (req: Request, res: Response, next: NextFunction) => {
