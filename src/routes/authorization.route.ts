@@ -1,35 +1,22 @@
+import JWT from 'jsonwebtoken';
 import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response, Router } from 'express';
 
-import ForbiddenError from '../model/errors/forbidden.error.model';
-import userRepository from '../database/repositories/user.repository';
+import basicAuthentication from '../middleware/basic.auth';
 
 const authRoute = Router();
 
-authRoute.post('/token', async (req: Request, res: Response, next: NextFunction) => {
+authRoute.post('/token', basicAuthentication, async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { authorization } = req.headers;
-        
-        if(!authorization) {
-            throw new ForbiddenError("Something went wrong!");
-        }
-        
-        const [ authType, token ] = authorization.split(" ");
-        
-        if(authType !== 'Basic' || !token) {
-            throw new ForbiddenError("Something went wrong!");
-        }
-        
-        const content = Buffer.from(token, 'base64').toString('utf-8');
-        const [ username, password ] = content.split(":");
+        const { user } = req;
 
-        if(!username || !password) {
-            throw new ForbiddenError("Something went wrong!");
-        }
+        const payload = { username: user!.username };
+        const secret = "my_secret_key";
+        const options = { subject: user!.uuid };
+        
+        const jwtToken = JWT.sign(payload, secret, options);
 
-        const user = await userRepository.findByUsernameAndPassword(username, password);
-        console.log(user)
-        res.status(StatusCodes.CREATED).send();
+        res.status(StatusCodes.OK).json({ token: jwtToken });
 
     } catch(error) {
         next(error);
