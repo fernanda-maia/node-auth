@@ -4,6 +4,7 @@ import usersRoute from './routes/users.route';
 import statusRoutes from './routes/status.route';
 import authRoute from './routes/authorization.route';
 import errorHandler from './middleware/error.handler';
+import JWTAuthentication from './middleware/jwt.auth';
 
 const PORT = 3000;
 const HOST = 'localhost'
@@ -15,6 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(statusRoutes);
 app.use(authRoute);
+
+app.use(JWTAuthentication);
 app.use(usersRoute);
 
 app.use(errorHandler);

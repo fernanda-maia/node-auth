@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response, Router } from 'express';
 
 import basicAuthentication from '../middleware/basic.auth';
+import JWTAuthentication from '../middleware/jwt.auth';
 
 const authRoute = Router();
 
@@ -21,6 +22,10 @@ authRoute.post('/token', basicAuthentication, async (req: Request, res: Response
     } catch(error) {
         next(error);
     }
+});
+
+authRoute.post('/token/validate', JWTAuthentication, (req: Request, res: Response, next: NextFunction) => {
+    res.sendStatus(StatusCodes.OK);
 });
 
 export default authRoute;
