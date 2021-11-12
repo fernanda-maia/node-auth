@@ -1,7 +1,9 @@
+import config from 'config';
 import JWT from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 
 import ForbiddenError from '../model/errors/forbidden.error.model';
+import UnauthorizedError from '../model/errors/unauthorized.error.model';
 
 async function JWTAuthentication(req: Request, res: Response, next: NextFunction) {
     try {
@@ -18,8 +20,8 @@ async function JWTAuthentication(req: Request, res: Response, next: NextFunction
         }
 
         try {
-            const payload = JWT.verify(token, "my_secret_key");
-
+            const payload = JWT.verify(token, config.get<string>("authentication.cryptKey"));
+            
             if(typeof payload !== 'object' || !payload.sub) {
                 throw new ForbiddenError("Something went wrong!");
             }
@@ -31,12 +33,13 @@ async function JWTAuthentication(req: Request, res: Response, next: NextFunction
             }
     
             req.user = user;
-
-            next();
-        } catch(error) {
-            throw new ForbiddenError("Something went wrong!");
-        }
     
+            next();
+
+        } catch {
+            throw new UnauthorizedError("Not allowed!");
+        }
+
     } catch(error) {
         next(error);
     }

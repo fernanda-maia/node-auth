@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import DatabaseError from '../model/errors/database.error.model';
 import ForbiddenError from '../model/errors/forbidden.error.model';
+import UnauthorizedError from '../model/errors/unauthorized.error.model';
 
 function errorHandler(err: any, req: Request, res: Response, next: NextFunction) {
     const instance = err.constructor.name;
@@ -15,6 +16,10 @@ function errorHandler(err: any, req: Request, res: Response, next: NextFunction)
 
         case ForbiddenError.name:
             code = StatusCodes.FORBIDDEN;
+            break;
+        
+        case UnauthorizedError.name:
+            code = StatusCodes.UNAUTHORIZED;
             break;
     
         default:

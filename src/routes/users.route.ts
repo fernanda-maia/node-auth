@@ -24,16 +24,26 @@ usersRoute.get('/users/:uuid', async (req: Request<{ uuid: string }>, res: Respo
 });
 
 usersRoute.post('/users', async (req: Request, res: Response, next: NextFunction) => {
-    const newUser = await userRepository.createUser(req.body);
-    res.status(StatusCodes.CREATED).send(newUser);
+    try {
+        const newUser = await userRepository.createUser(req.body);
+        res.status(StatusCodes.CREATED).send(newUser);
+
+    } catch(error) {
+        next(error);
+    }
 });
 
 usersRoute.put('/users/:uuid', async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
-    const userToUpdate = req.body;
-    userToUpdate.uuid = req.params.uuid;
+    try {
+        const userToUpdate = req.body;
+        userToUpdate.uuid = req.params.uuid;
+    
+        await userRepository.updateUser(userToUpdate)
+        res.status(StatusCodes.NO_CONTENT).send();
 
-    await userRepository.updateUser(userToUpdate)
-    res.status(StatusCodes.NO_CONTENT).send();
+    } catch(error) {
+        next(error);
+    }
 });
 
 usersRoute.delete('/users/:uuid', async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {

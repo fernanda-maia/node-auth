@@ -1,4 +1,5 @@
-import JWT from 'jsonwebtoken';
+import config from 'config';
+import JWT, { SignOptions } from 'jsonwebtoken';
 import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response, Router } from 'express';
 
@@ -12,8 +13,8 @@ authRoute.post('/token', basicAuthentication, async (req: Request, res: Response
         const { user } = req;
 
         const payload = { username: user!.username };
-        const secret = "my_secret_key";
-        const options = { subject: user!.uuid };
+        const secret = config.get<string>("authentication.cryptKey");
+        const options: SignOptions = { subject: user!.uuid, expiresIn: "2h" };
         
         const jwtToken = JWT.sign(payload, secret, options);
 
