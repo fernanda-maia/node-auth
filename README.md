@@ -115,3 +115,15 @@ POST | /users | 201, 400, 401, 403
 POST | /token | 200, 403
 POST | /token/validate | 200, 401, 403
 
+
+&nbsp;
+## Status code
+
+Status | Descrição
+-------|------ 
+200 | Requisição aceita
+201 | Recurso criado
+204 | Sem conteúdo
+400 | Dados inválidos ou incorretos
+401 | Token inválido
+403 | Ausência de informação
